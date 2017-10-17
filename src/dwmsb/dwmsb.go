@@ -69,7 +69,7 @@ func cpu() (s string) {
 
 	line := strings.Split(string(out), "\n")[2]
 	temp_full := strings.Fields(line)[1]
-	temp := temp_full[1:len(temp_full) - 5]
+	temp := temp_full[1 : len(temp_full)-5]
 
 	return fmt.Sprintf("%s/%s", load, temp)
 }
@@ -105,7 +105,7 @@ func network() (s string) {
 		s = string(out)
 		a := strings.Index(s, "\"")
 		b := strings.LastIndex(s, "\"")
-		iwname = s[a+1:b]
+		iwname = s[a+1 : b]
 	}
 	return fmt.Sprintf("w:%s %s", iwname, addresses)
 }
@@ -117,7 +117,7 @@ func date() (s string) {
 }
 
 func main() {
-	l := []string {
+	l := []string{
 		audio(),
 		memory(),
 		disk_usage(),
