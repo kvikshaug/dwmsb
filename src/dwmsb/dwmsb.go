@@ -16,6 +16,33 @@ func check(e error) {
 	}
 }
 
+func battery() (s string) {
+	out, err := ioutil.ReadFile("/sys/class/power_supply/BAT0/uevent")
+	check(err)
+
+	lines := strings.Split(string(out), "\n")
+	char := ""
+
+	if strings.Contains(lines[1], "Full") {
+		char = "f"
+	} else if strings.Contains(lines[1], "Discharging") {
+		char = "d"
+	} else if strings.Contains(lines[1], "Charging") {
+		char = "c"
+	} else {
+		char = "?"
+	}
+
+	full, err := strconv.ParseFloat(strings.Split(lines[9], "=")[1], 64)
+	check(err)
+
+	now, err := strconv.ParseFloat(strings.Split(lines[10], "=")[1], 64)
+	check(err)
+
+	pct := int64(((now / full) * 100) + 0.5)
+	return fmt.Sprintf("%s%d", char, pct)
+}
+
 func audio() (s string) {
 	out, err := exec.Command("amixer", "get", "Master").Output()
 	check(err)
@@ -118,6 +145,7 @@ func date() (s string) {
 
 func main() {
 	l := []string{
+		battery(),
 		audio(),
 		memory(),
 		disk_usage(),
