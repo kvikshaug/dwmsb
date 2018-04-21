@@ -112,7 +112,25 @@ func network() (s string) {
 		b := strings.LastIndex(s, "\"")
 		iwname = s[a+1 : b]
 	}
-	return fmt.Sprintf("w:%s", iwname)
+
+	files, err := ioutil.ReadDir("/sys/class/net")
+	check(err)
+
+	ethstatus := "?"
+	for _, folder := range files {
+		if strings.HasPrefix(folder.Name(), "enp") {
+			out, err = ioutil.ReadFile(fmt.Sprintf("/sys/class/net/%s/operstate", folder.Name()))
+			check(err)
+
+			if (folder.Name() == "up") {
+				ethstatus = "↑"
+			} else {
+				ethstatus = "↓"
+			}
+		}
+	}
+
+	return fmt.Sprintf("w:%s e:%s", iwname, ethstatus)
 }
 
 func date() (s string) {
