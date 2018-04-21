@@ -102,29 +102,7 @@ func cpu() (s string) {
 }
 
 func network() (s string) {
-	// out, err := exec.Command("ip", "-o", "addr", "show", "up", "primary", "scope", "global").Output()
-	// check(err)
-
-	// lines := strings.Split(string(out), "\n")
-	// var output bytes.Buffer
-	// for _, line := range lines {
-	// 	if len(line) == 0 {
-	// 		continue
-	// 	}
-	// 	columns := strings.Fields(line)
-	// 	address := columns[3]
-	// 	address = address[:len(address)-3]
-	// 	output.WriteString(fmt.Sprintf("%s ", address))
-	// }
-
-	// addresses := output.String()
-	// addresses = addresses[:len(addresses)-1]
-
-	out, err := exec.Command("hostname", "-i").Output()
-	check(err)
-	addresses := strings.Trim(string(out), "\n ")
-
-	out, err = exec.Command("iwgetid").Output()
+	out, err := exec.Command("iwgetid").Output()
 	var iwname string
 	if err != nil {
 		iwname = "↓"
@@ -134,7 +112,7 @@ func network() (s string) {
 		b := strings.LastIndex(s, "\"")
 		iwname = s[a+1 : b]
 	}
-	return fmt.Sprintf("w:%s %s", iwname, addresses)
+	return fmt.Sprintf("w:%s", iwname)
 }
 
 func date() (s string) {
