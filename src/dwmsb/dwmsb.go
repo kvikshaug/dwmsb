@@ -122,7 +122,7 @@ func network() (s string) {
 			out, err = ioutil.ReadFile(fmt.Sprintf("/sys/class/net/%s/operstate", folder.Name()))
 			check(err)
 
-			if (folder.Name() == "up") {
+			if (string(out) == "up\n") {
 				ethstatus = "↑"
 			} else {
 				ethstatus = "↓"
