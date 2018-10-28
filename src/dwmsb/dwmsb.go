@@ -49,14 +49,24 @@ func audio() (s string) {
 	check(err)
 
 	lines := strings.Split(string(out), "\n")
-	line := lines[4]
 
-	if strings.Contains(lines[4], "[off]") {
-		return "M"
-	} else {
-		r := strings.Trim(strings.Fields(line)[3], "[]")
-		return fmt.Sprintf("v%s", r)
+	volume := "?"
+	for _, line := range lines {
+		if !strings.Contains(line, "[") {
+			continue
+		}
+
+		if strings.Contains(line, "[off]") {
+			volume = "M"
+			break
+		} else {
+			r := strings.Trim(strings.Fields(line)[3], "[]")
+			volume = fmt.Sprintf("v%s", r)
+			break
+		}
 	}
+
+	return volume
 }
 
 func memory() (s string) {
