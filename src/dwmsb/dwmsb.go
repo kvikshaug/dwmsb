@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"path/filepath"
 )
 
 func check(e error) {
@@ -91,12 +92,20 @@ func cpu() (s string) {
 
 	load := strings.Split(string(out), "\n")[0][:4]
 
-	out, err = exec.Command("sensors").Output()
+	matches, err := filepath.Glob("/sys/class/thermal/thermal_zone*")
 	check(err)
-
-	line := strings.Split(string(out), "\n")[2]
-	temp_full := strings.Fields(line)[1]
-	temp := temp_full[1 : len(temp_full)-5]
+	temp := "?"
+	for index := range matches {
+		out, err := ioutil.ReadFile(fmt.Sprintf("/sys/class/thermal/thermal_zone%d/type", index))
+		check(err)
+		if strings.Trim(string(out), "\n") == "x86_pkg_temp" {
+			out, err := ioutil.ReadFile(fmt.Sprintf("/sys/class/thermal/thermal_zone%d/temp", index))
+			check(err)
+			tempMillis, err := strconv.ParseFloat(strings.Trim(string(out), "\n"), 64)
+			check(err)
+			temp = fmt.Sprintf("%.0f", tempMillis / 1000)
+		}
+	}
 
 	return fmt.Sprintf("%s/%s", load, temp)
 }
