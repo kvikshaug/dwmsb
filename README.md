@@ -10,7 +10,7 @@ Output status bar metrics suitable for [dwm](https://dwm.suckless.org).
 
 ### Commands
 
-`amixer`, `df`, `sensors`, `hostname`, `iwgetid`
+`amixer`, `df`, `hostname`, `iwgetid`
 
 ## Example
 
