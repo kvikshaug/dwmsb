@@ -82,7 +82,11 @@ func memory() (s string) {
 	check(err)
 
 	pct := int64(100 - ((available / total) * 100) + 0.5)
-	return fmt.Sprintf("m%d%%", pct)
+	if (pct > 80) {
+		return fmt.Sprintf("m%d%% ** WARNING: HIGH MEMORY USAGE **", pct)
+	} else {
+		return fmt.Sprintf("m%d%%", pct)
+	}
 }
 
 func disk_usage() (s string) {
